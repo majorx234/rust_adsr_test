@@ -65,21 +65,31 @@ fn main() {
                         values[startpose + n] = s;
                     }
                     if (max_attack + max_decay) - startpose < frame_size {
-                        let rest_sustain = max_decay - startpose;
+                        let rest_sustain = max_attack + max_decay - startpose;
                         for n in 0..rest_sustain {
                             values[startpose + n] = sustain_value;
                         }
                     }
                 } else {
+                    // WIP
+                    // let rest_frame_size = (sample_size - startpose);
+                    // println!("{}", startpose);
+                    // println!("{}", rest_frame_size);
+                    // let max_frame_size = frame_size.min(frame_size - rest_frame_size);
                     for n in 0..frame_size {
-                        values[startpose + n] = sustain_value;
+                        let index = startpose + n;
+                        if index < sample_size {
+                            values[index] = sustain_value;
+                        }
                     }
                 }
             }
         }
         for n in 0..frame_size {
             let pose: usize = startpose + n;
-            println!("pose[{}]: {}", pose, values[pose]);
+            if pose < sample_size {
+                println!("{}", values[pose]);
+            }
         }
         startpose += frame_size;
     }
