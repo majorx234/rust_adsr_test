@@ -1,5 +1,4 @@
 fn main() {
-    println!("Hello, world!");
     let ta: f32 = 0.1;
     let td: f32 = 0.2;
     let ts: f32 = 0.5;
@@ -19,6 +18,7 @@ fn main() {
     let max_release: usize = fmax_release as usize;
 
     let frame_max_attack: usize = max_attack % frame_size;
+    let frame_max_decay: usize = (max_attack + max_decay) % frame_size;
     let mut values: Vec<f32> = vec![0.0; 96000];
 
     let mut startpose: usize = 0;
@@ -57,7 +57,7 @@ fn main() {
                 }
             } else {
                 // startpose > max_attack
-                if startpose < (max_attack + max_decay) {
+                if startpose < (max_attack + max_decay - (frame_size - frame_max_decay)) {
                     //decay
                     for n in 0..frame_size {
                         let k: usize = startpose + n - max_attack;
@@ -71,6 +71,7 @@ fn main() {
                         }
                     }
                 } else {
+                    //if startpose < (max_attack + max_decay + max_sustain) {
                     // WIP
                     // let rest_frame_size = (sample_size - startpose);
                     // println!("{}", startpose);
@@ -82,7 +83,12 @@ fn main() {
                             values[index] = sustain_value;
                         }
                     }
+                    //}
+                    //else {
+
+                    //}
                 }
+                // releasepart
             }
         }
         for n in 0..frame_size {
