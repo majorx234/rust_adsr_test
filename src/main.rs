@@ -1,3 +1,5 @@
+use std::time::SystemTime;
+
 fn main() {
     let ta: f32 = 0.1;
     let td: f32 = 0.2;
@@ -22,6 +24,8 @@ fn main() {
     let mut values: Vec<f32> = vec![0.0; 96000];
 
     let mut startpose: usize = 0;
+
+    let time_before = SystemTime::now();
     while (startpose < sample_size) {
         if startpose + frame_size < max_attack {
             for n in 0..frame_size {
@@ -99,4 +103,10 @@ fn main() {
         }
         startpose += frame_size;
     }
+    let time_after = SystemTime::now();
+    let average = time_after
+        .duration_since(time_before)
+        .expect("Ok")
+        .as_nanos();
+    // println!("time: {}", average);
 }
